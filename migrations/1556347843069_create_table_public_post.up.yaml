@@ -1,0 +1,11 @@
+- args:
+    sql: CREATE TABLE "public"."post"("id" integer NOT NULL, "slug" text NOT NULL,
+      "title" text NOT NULL, "body" text NOT NULL, "intro" text NOT NULL, "cover_imag"
+      text NOT NULL, "created_on" timestamp with time zone NOT NULL, "user_id" integer
+      NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("user_id") REFERENCES "public"."user"("id")
+      ON UPDATE cascade ON DELETE cascade);
+  type: run_sql
+- args:
+    name: post
+    schema: public
+  type: add_existing_table_or_view
