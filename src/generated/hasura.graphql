@@ -1,0 +1,945 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+# conflict action
+enum conflict_action {
+  # ignore the insert on this row
+  ignore
+
+  # update the row with the given values
+  update
+}
+
+# expression to compare columns of type integer. All fields are combined with logical 'AND'.
+input integer_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int]
+}
+
+# mutation root
+type mutation_root {
+  # delete data from the table: "post"
+  delete_post(
+    # filter the rows which have to be deleted
+    where: post_bool_exp!
+  ): post_mutation_response
+
+  # delete data from the table: "user"
+  delete_user(
+    # filter the rows which have to be deleted
+    where: user_bool_exp!
+  ): user_mutation_response
+
+  # insert data into the table: "post"
+  insert_post(
+    # the rows to be inserted
+    objects: [post_insert_input!]!
+
+    # on conflict condition
+    on_conflict: post_on_conflict
+  ): post_mutation_response
+
+  # insert data into the table: "user"
+  insert_user(
+    # the rows to be inserted
+    objects: [user_insert_input!]!
+
+    # on conflict condition
+    on_conflict: user_on_conflict
+  ): user_mutation_response
+
+  # update data of the table: "post"
+  update_post(
+    # increments the integer columns with given value of the filtered values
+    _inc: post_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: post_set_input
+
+    # filter the rows which have to be updated
+    where: post_bool_exp!
+  ): post_mutation_response
+
+  # update data of the table: "user"
+  update_user(
+    # increments the integer columns with given value of the filtered values
+    _inc: user_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: user_set_input
+
+    # filter the rows which have to be updated
+    where: user_bool_exp!
+  ): user_mutation_response
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# columns and relationships of "post"
+type post {
+  body: String!
+  cover_imag: String!
+  created_on: timestamptz!
+  id: Int!
+  intro: String!
+  slug: String!
+  title: String!
+
+  # An object relationship
+  user: user!
+  user_id: Int!
+}
+
+# aggregated selection of "post"
+type post_aggregate {
+  aggregate: post_aggregate_fields
+  nodes: [post!]!
+}
+
+# aggregate fields of "post"
+type post_aggregate_fields {
+  avg: post_avg_fields
+  count(columns: [post_select_column!], distinct: Boolean): Int
+  max: post_max_fields
+  min: post_min_fields
+  stddev: post_stddev_fields
+  stddev_pop: post_stddev_pop_fields
+  stddev_samp: post_stddev_samp_fields
+  sum: post_sum_fields
+  var_pop: post_var_pop_fields
+  var_samp: post_var_samp_fields
+  variance: post_variance_fields
+}
+
+# order by aggregate values of table "post"
+input post_aggregate_order_by {
+  avg: post_avg_order_by
+  count: order_by
+  max: post_max_order_by
+  min: post_min_order_by
+  stddev: post_stddev_order_by
+  stddev_pop: post_stddev_pop_order_by
+  stddev_samp: post_stddev_samp_order_by
+  sum: post_sum_order_by
+  var_pop: post_var_pop_order_by
+  var_samp: post_var_samp_order_by
+  variance: post_variance_order_by
+}
+
+# input type for inserting array relation for remote table "post"
+input post_arr_rel_insert_input {
+  data: [post_insert_input!]!
+  on_conflict: post_on_conflict
+}
+
+# aggregate avg on columns
+type post_avg_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by avg() on columns of table "post"
+input post_avg_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# Boolean expression to filter rows from the table "post". All fields are combined with a logical 'AND'.
+input post_bool_exp {
+  _and: [post_bool_exp]
+  _not: post_bool_exp
+  _or: [post_bool_exp]
+  body: text_comparison_exp
+  cover_imag: text_comparison_exp
+  created_on: timestamptz_comparison_exp
+  id: integer_comparison_exp
+  intro: text_comparison_exp
+  slug: text_comparison_exp
+  title: text_comparison_exp
+  user: user_bool_exp
+  user_id: integer_comparison_exp
+}
+
+# unique or primary key constraints on table "post"
+enum post_constraint {
+  # unique or primary key constraint
+  post_pkey
+}
+
+# input type for incrementing integer columne in table "post"
+input post_inc_input {
+  id: Int
+  user_id: Int
+}
+
+# input type for inserting data into table "post"
+input post_insert_input {
+  body: String
+  cover_imag: String
+  created_on: timestamptz
+  id: Int
+  intro: String
+  slug: String
+  title: String
+  user: user_obj_rel_insert_input
+  user_id: Int
+}
+
+# aggregate max on columns
+type post_max_fields {
+  body: String
+  cover_imag: String
+  created_on: timestamptz
+  id: Int
+  intro: String
+  slug: String
+  title: String
+  user_id: Int
+}
+
+# order by max() on columns of table "post"
+input post_max_order_by {
+  body: order_by
+  cover_imag: order_by
+  created_on: order_by
+  id: order_by
+  intro: order_by
+  slug: order_by
+  title: order_by
+  user_id: order_by
+}
+
+# aggregate min on columns
+type post_min_fields {
+  body: String
+  cover_imag: String
+  created_on: timestamptz
+  id: Int
+  intro: String
+  slug: String
+  title: String
+  user_id: Int
+}
+
+# order by min() on columns of table "post"
+input post_min_order_by {
+  body: order_by
+  cover_imag: order_by
+  created_on: order_by
+  id: order_by
+  intro: order_by
+  slug: order_by
+  title: order_by
+  user_id: order_by
+}
+
+# response of any mutation on the table "post"
+type post_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [post!]!
+}
+
+# input type for inserting object relation for remote table "post"
+input post_obj_rel_insert_input {
+  data: post_insert_input!
+  on_conflict: post_on_conflict
+}
+
+# on conflict condition type for table "post"
+input post_on_conflict {
+  constraint: post_constraint!
+  update_columns: [post_update_column!]!
+}
+
+# ordering options when selecting data from "post"
+input post_order_by {
+  body: order_by
+  cover_imag: order_by
+  created_on: order_by
+  id: order_by
+  intro: order_by
+  slug: order_by
+  title: order_by
+  user: user_order_by
+  user_id: order_by
+}
+
+# select columns of table "post"
+enum post_select_column {
+  # column name
+  body
+
+  # column name
+  cover_imag
+
+  # column name
+  created_on
+
+  # column name
+  id
+
+  # column name
+  intro
+
+  # column name
+  slug
+
+  # column name
+  title
+
+  # column name
+  user_id
+}
+
+# input type for updating data in table "post"
+input post_set_input {
+  body: String
+  cover_imag: String
+  created_on: timestamptz
+  id: Int
+  intro: String
+  slug: String
+  title: String
+  user_id: Int
+}
+
+# aggregate stddev on columns
+type post_stddev_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by stddev() on columns of table "post"
+input post_stddev_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type post_stddev_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by stddev_pop() on columns of table "post"
+input post_stddev_pop_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type post_stddev_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by stddev_samp() on columns of table "post"
+input post_stddev_samp_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# aggregate sum on columns
+type post_sum_fields {
+  id: Int
+  user_id: Int
+}
+
+# order by sum() on columns of table "post"
+input post_sum_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# update columns of table "post"
+enum post_update_column {
+  # column name
+  body
+
+  # column name
+  cover_imag
+
+  # column name
+  created_on
+
+  # column name
+  id
+
+  # column name
+  intro
+
+  # column name
+  slug
+
+  # column name
+  title
+
+  # column name
+  user_id
+}
+
+# aggregate var_pop on columns
+type post_var_pop_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by var_pop() on columns of table "post"
+input post_var_pop_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# aggregate var_samp on columns
+type post_var_samp_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by var_samp() on columns of table "post"
+input post_var_samp_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# aggregate variance on columns
+type post_variance_fields {
+  id: Float
+  user_id: Float
+}
+
+# order by variance() on columns of table "post"
+input post_variance_order_by {
+  id: order_by
+  user_id: order_by
+}
+
+# query root
+type query_root {
+  # fetch data from the table: "post"
+  post(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): [post!]!
+
+  # fetch aggregated fields from the table: "post"
+  post_aggregate(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): post_aggregate!
+
+  # fetch data from the table: "post" using primary key columns
+  post_by_pk(id: Int!): post
+
+  # fetch data from the table: "user"
+  user(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): [user!]!
+
+  # fetch aggregated fields from the table: "user"
+  user_aggregate(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): user_aggregate!
+
+  # fetch data from the table: "user" using primary key columns
+  user_by_pk(id: Int!): user
+}
+
+# subscription root
+type subscription_root {
+  # fetch data from the table: "post"
+  post(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): [post!]!
+
+  # fetch aggregated fields from the table: "post"
+  post_aggregate(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): post_aggregate!
+
+  # fetch data from the table: "post" using primary key columns
+  post_by_pk(id: Int!): post
+
+  # fetch data from the table: "user"
+  user(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): [user!]!
+
+  # fetch aggregated fields from the table: "user"
+  user_aggregate(
+    # distinct select on columns
+    distinct_on: [user_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [user_order_by!]
+
+    # filter the rows returned
+    where: user_bool_exp
+  ): user_aggregate!
+
+  # fetch data from the table: "user" using primary key columns
+  user_by_pk(id: Int!): user
+}
+
+# expression to compare columns of type text. All fields are combined with logical 'AND'.
+input text_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+scalar timestamptz
+
+# expression to compare columns of type timestamptz. All fields are combined with logical 'AND'.
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz]
+}
+
+# columns and relationships of "user"
+type user {
+  email: String!
+  id: Int!
+  name: String!
+  password: String!
+
+  # An array relationship
+  posts(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): [post!]!
+
+  # An aggregated array relationship
+  posts_aggregate(
+    # distinct select on columns
+    distinct_on: [post_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [post_order_by!]
+
+    # filter the rows returned
+    where: post_bool_exp
+  ): post_aggregate!
+}
+
+# aggregated selection of "user"
+type user_aggregate {
+  aggregate: user_aggregate_fields
+  nodes: [user!]!
+}
+
+# aggregate fields of "user"
+type user_aggregate_fields {
+  avg: user_avg_fields
+  count(columns: [user_select_column!], distinct: Boolean): Int
+  max: user_max_fields
+  min: user_min_fields
+  stddev: user_stddev_fields
+  stddev_pop: user_stddev_pop_fields
+  stddev_samp: user_stddev_samp_fields
+  sum: user_sum_fields
+  var_pop: user_var_pop_fields
+  var_samp: user_var_samp_fields
+  variance: user_variance_fields
+}
+
+# order by aggregate values of table "user"
+input user_aggregate_order_by {
+  avg: user_avg_order_by
+  count: order_by
+  max: user_max_order_by
+  min: user_min_order_by
+  stddev: user_stddev_order_by
+  stddev_pop: user_stddev_pop_order_by
+  stddev_samp: user_stddev_samp_order_by
+  sum: user_sum_order_by
+  var_pop: user_var_pop_order_by
+  var_samp: user_var_samp_order_by
+  variance: user_variance_order_by
+}
+
+# input type for inserting array relation for remote table "user"
+input user_arr_rel_insert_input {
+  data: [user_insert_input!]!
+  on_conflict: user_on_conflict
+}
+
+# aggregate avg on columns
+type user_avg_fields {
+  id: Float
+}
+
+# order by avg() on columns of table "user"
+input user_avg_order_by {
+  id: order_by
+}
+
+# Boolean expression to filter rows from the table "user". All fields are combined with a logical 'AND'.
+input user_bool_exp {
+  _and: [user_bool_exp]
+  _not: user_bool_exp
+  _or: [user_bool_exp]
+  email: text_comparison_exp
+  id: integer_comparison_exp
+  name: text_comparison_exp
+  password: text_comparison_exp
+  posts: post_bool_exp
+}
+
+# unique or primary key constraints on table "user"
+enum user_constraint {
+  # unique or primary key constraint
+  user_email_key
+
+  # unique or primary key constraint
+  user_pkey
+}
+
+# input type for incrementing integer columne in table "user"
+input user_inc_input {
+  id: Int
+}
+
+# input type for inserting data into table "user"
+input user_insert_input {
+  email: String
+  id: Int
+  name: String
+  password: String
+  posts: post_arr_rel_insert_input
+}
+
+# aggregate max on columns
+type user_max_fields {
+  email: String
+  id: Int
+  name: String
+  password: String
+}
+
+# order by max() on columns of table "user"
+input user_max_order_by {
+  email: order_by
+  id: order_by
+  name: order_by
+  password: order_by
+}
+
+# aggregate min on columns
+type user_min_fields {
+  email: String
+  id: Int
+  name: String
+  password: String
+}
+
+# order by min() on columns of table "user"
+input user_min_order_by {
+  email: order_by
+  id: order_by
+  name: order_by
+  password: order_by
+}
+
+# response of any mutation on the table "user"
+type user_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [user!]!
+}
+
+# input type for inserting object relation for remote table "user"
+input user_obj_rel_insert_input {
+  data: user_insert_input!
+  on_conflict: user_on_conflict
+}
+
+# on conflict condition type for table "user"
+input user_on_conflict {
+  constraint: user_constraint!
+  update_columns: [user_update_column!]!
+}
+
+# ordering options when selecting data from "user"
+input user_order_by {
+  email: order_by
+  id: order_by
+  name: order_by
+  password: order_by
+  posts_aggregate: post_aggregate_order_by
+}
+
+# select columns of table "user"
+enum user_select_column {
+  # column name
+  email
+
+  # column name
+  id
+
+  # column name
+  name
+
+  # column name
+  password
+}
+
+# input type for updating data in table "user"
+input user_set_input {
+  email: String
+  id: Int
+  name: String
+  password: String
+}
+
+# aggregate stddev on columns
+type user_stddev_fields {
+  id: Float
+}
+
+# order by stddev() on columns of table "user"
+input user_stddev_order_by {
+  id: order_by
+}
+
+# aggregate stddev_pop on columns
+type user_stddev_pop_fields {
+  id: Float
+}
+
+# order by stddev_pop() on columns of table "user"
+input user_stddev_pop_order_by {
+  id: order_by
+}
+
+# aggregate stddev_samp on columns
+type user_stddev_samp_fields {
+  id: Float
+}
+
+# order by stddev_samp() on columns of table "user"
+input user_stddev_samp_order_by {
+  id: order_by
+}
+
+# aggregate sum on columns
+type user_sum_fields {
+  id: Int
+}
+
+# order by sum() on columns of table "user"
+input user_sum_order_by {
+  id: order_by
+}
+
+# update columns of table "user"
+enum user_update_column {
+  # column name
+  email
+
+  # column name
+  id
+
+  # column name
+  name
+
+  # column name
+  password
+}
+
+# aggregate var_pop on columns
+type user_var_pop_fields {
+  id: Float
+}
+
+# order by var_pop() on columns of table "user"
+input user_var_pop_order_by {
+  id: order_by
+}
+
+# aggregate var_samp on columns
+type user_var_samp_fields {
+  id: Float
+}
+
+# order by var_samp() on columns of table "user"
+input user_var_samp_order_by {
+  id: order_by
+}
+
+# aggregate variance on columns
+type user_variance_fields {
+  id: Float
+}
+
+# order by variance() on columns of table "user"
+input user_variance_order_by {
+  id: order_by
+}
+

@@ -1,0 +1,9 @@
+# import * from './src/generated/hasura.graphql'
+
+type Query {
+  test: String
+}
+
+type Mutation {
+  test(id: ID): post
+}
