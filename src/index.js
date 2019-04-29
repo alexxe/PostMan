@@ -39,6 +39,9 @@ async function main() {
         session: false
       },
       (err, user, info) => {
+        if (info) {
+          console.log(info);
+        }
         if (user) {
           req.user = user;
         }
