@@ -30,20 +30,15 @@ async function main() {
     })
   });
 
-  // server.express.options(
-  //   '*',
-  //   cors({
-  //     origin: false
-  //   })
-  // );
-  // server.express.use(
-  //   cors({
-  //     origin: false
-  //   })
-  // );
   server.express.use(bodyParser.json());
   server.express.use(passport.initialize());
-  server.express.use('/auth', auth);
+  const corsOptions = {
+    credentials: true,
+    origin: 'http://localhost:4200',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  };
+  server.express.use('/auth', cors(corsOptions), auth);
   server.express.use('/graphql', (req, res, next) => {
     passport.authenticate(
       'jwt',
@@ -65,10 +60,7 @@ async function main() {
 
   server.start(
     {
-      cors: {
-        origin: '*',
-        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE']
-      },
+      cors: corsOptions,
       endpoint: '/graphql',
       playground: '/playground',
       formatError: error => {
