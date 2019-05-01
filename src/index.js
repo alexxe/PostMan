@@ -38,7 +38,7 @@ async function main() {
     preflightContinue: false,
     optionsSuccessStatus: 204
   };
-  server.express.use('/auth', cors(corsOptions), auth);
+  server.express.use('/auth', cors(corsOptions), auth(binding));
   server.express.use('/graphql', (req, res, next) => {
     passport.authenticate(
       'jwt',

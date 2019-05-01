@@ -10,12 +10,28 @@ const LocalStrategy = PassportLocal.Strategy;
 const secret = 'your_jwt_secret';
 
 passport.use(
-  new LocalStrategy(function(username, password, done) {
-    const user = {
-      id: 1,
-      name: 'userName'
+  new LocalStrategy(async function(username, password, next) {
+    console.log(db);
+    const where = {
+      _and: {
+        name: {
+          _eq: username
+        }
+      },
+      password: {
+        _eq: password
+      }
     };
-    return done(null, user);
+    const [user] = await db.query.user(
+      {
+        where
+      },
+      `{
+      id
+        
+      }`
+    );
+    return next(null, user);
   })
 );
 
@@ -68,4 +84,7 @@ passport.use(
   )
 );
 
-module.exports = router;
+module.exports = function(db) {
+  this.db = db;
+  return router;
+};

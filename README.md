@@ -9,7 +9,6 @@
 - docker-compose
 - database access: [Azure Data Studio](https://docs.microsoft.com/de-de/sql/azure-data-studio/download?view=sql-server-2017) can be used
 
-
 ### Visual studio code plugins
 
 - [Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag)
@@ -47,4 +46,4 @@
 - run `npm start` to start the service
 - run `hasura migrate apply` to apply the latest migrations
 - run `hasura console` to open the hasura console
- 
+- optional apply init data 'hasura.seed.graphql' with hasura console

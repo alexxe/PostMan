@@ -1,0 +1,31 @@
+mutation {
+  insert_user(
+    objects: {
+      email: "testUser@test.net"
+      name: "testUser"
+      password: "123"
+      posts: {
+        data: [
+          {
+            title: "post 1"
+            slug: "slug1"
+            intro: "intro1"
+            cover_imag: "cover_imag1"
+            body: "bla bla"
+          }
+          {
+            title: "post 2"
+            slug: "slug2"
+            intro: "intro2"
+            cover_imag: "cover_imag1"
+            body: "bla bla"
+          }
+        ]
+      }
+    }
+  ) {
+    returning {
+      id
+    }
+  }
+}
