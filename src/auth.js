@@ -10,8 +10,7 @@ const LocalStrategy = PassportLocal.Strategy;
 const secret = 'your_jwt_secret';
 
 passport.use(
-  new LocalStrategy(async function(username, password, next) {
-    console.log(db);
+  new LocalStrategy(async function (username, password, next) {
     const where = {
       _and: {
         name: {
@@ -22,8 +21,7 @@ passport.use(
         _eq: password
       }
     };
-    const [user] = await db.query.user(
-      {
+    const [user] = await db.query.user({
         where
       },
       `{
@@ -36,10 +34,9 @@ passport.use(
 );
 
 /* POST login. */
-router.post('/login', function(req, res, next) {
+router.post('/login', function (req, res, next) {
   passport.authenticate(
-    'local',
-    {
+    'local', {
       session: false
     },
     (err, user, info) => {
@@ -51,8 +48,7 @@ router.post('/login', function(req, res, next) {
       }
 
       req.login(
-        user,
-        {
+        user, {
           session: false
         },
         err => {
@@ -73,18 +69,17 @@ router.post('/login', function(req, res, next) {
 });
 
 passport.use(
-  new JWTStrategy(
-    {
+  new JWTStrategy({
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
       secretOrKey: secret
     },
-    function(jwtPayload, cb) {
+    function (jwtPayload, cb) {
       return cb(null, jwtPayload);
     }
   )
 );
 
-module.exports = function(db) {
+module.exports = function (db) {
   this.db = db;
   return router;
 };
